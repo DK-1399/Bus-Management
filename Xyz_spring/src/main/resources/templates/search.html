@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bus Management System -- All Buses</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+.container{
+    width: 100%;
+    min-height: 100vh;
+    background: url(/bg.jpeg);
+    background-position: center;
+    background-size: cover;
+}
+
+.navigation{
+    width: 100;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: lightbeige;
+    padding: .3rem 2rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.nav-title-logo{
+    width: 50px;
+}
+
+.nav-links-box{
+    display: flex;
+    flex-direction: row;
+
+}
+.nav-links{
+    list-style: none;
+    margin-left: 1rem;
+}
+.nav-links-anchor{
+    text-decoration: none;
+    color: skyblue;
+    transition: all .2s;
+}
+.nav-links-anchor:hover{
+    text-decoration: underline;
+    color: #0a6362;
+}
+.search-box{
+    width: 50%;
+    margin: 3rem auto;
+    padding: 2rem;
+    border-radius: 5px;
+    background-color: #00000040;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.search-box h2{
+    color: white;
+    background-color: #00c1bf;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 5px;
+    padding: .6rem 0;
+    text-align: center;
+}
+.form-group{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    margin: 1rem auto;
+}
+.form-group label{
+    color: white;
+    margin-bottom: .5rem;
+}
+input{
+    padding: .5rem;
+}
+input[type="submit"]{
+    background: linear-gradient(90deg, rgb(0 59 79), #00d7d1);
+    transition: all .2s;
+    outline: none;
+    border: none;
+    color: white;
+    padding: .5rem 0;
+    border-radius: 100px;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.table{
+    width: 100%;
+    background-color: #00000040;
+    padding: .3rem;
+    border-radius: 5px;
+}
+thead{
+    background-color: antiquewhite;
+}
+thead th{
+    color: #0a6362;
+    font-weight: 500;
+}
+
+tbody th{
+    color: white;
+    margin-top: 1rem;
+    font-weight: 200;
+    letter-spacing: 1px;
+
+}
+
+.flight-details{
+    padding: 3rem .8rem;
+    width: 100%;
+}
+.no-result{
+    background-color: #00000040;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    width: fit-content;
+    margin:  2rem auto;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+}
+.no-result p{
+    font-size: 2rem;
+    color: white;
+}
+.result-heading{
+    text-align: center;
+    background-color: white;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    font-weight: 400;
+}
+.book-btn{
+	background-color:black;
+	padding:1px 14px;
+	color:white;
+	text-transform:uppercase;
+	border-radius:3px;
+	text-decoration:none;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+            <div class="nav-title">
+                <img  class="nav-title-logo" src="./logo.png" alt="logo">
+            </div>
+            <ul class="nav-links-box">
+                <li class="nav-links"><a class="nav-links-anchor" href="/"><i class="bi bi-house"></i> Home</a></li>
+                <li class="nav-links"><a class="nav-links-anchor" href="/buses"><i class="bi bi-roadbus"></i> 🚌Buses</a></li>
+                <li class="nav-links"><a class="nav-links-anchor" href="/search"><i class="bi bi-search"></i> Search</a></li>
+                <li class="nav-links"><a class="nav-links-anchor" href="/ticket"><i class="bi bi-ticket-detailed"></i> Ticket</a></li>
+            </ul>
+        </div>
+        <div class="search-box">
+            <h2> Search Your Bus </h2>
+            <form class="form" method="POST" th:action="@{/searchdata}">
+                <div class="form-group">
+                    <label for="source">Enter Source </label>
+                    <input type="text" name="source" required>
+                </div>
+                <div class="form-group">
+                    <label for="destination">Enter Destination</label>
+                    <input type="text" name="destination" required>
+                </div>
+                <div class="form-group">
+                    <label for="traveldate">Traveling Date</label>
+                    <input type="date" name="traveldate" required>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Search">
+                </div>
+            </form>
+        </div>
+        
+        <div class="flight-details" th:if="${searchResult != null}">
+         <h2 class="result-heading">Bus Results</h2>
+	        <div class="no-result" th:if="${searchResult.size() == 0}">
+	        	<p>No Buses Available</p>
+	        </div>
+            <table class="table" th:if="${searchResult.size() > 0}">
+                <thead>
+                    <tr>
+                        <th>Bus ID</th>
+                        <th>Bus Name</th>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Date</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Seats</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="f:${searchResult}">
+                        <th th:text="${f.busId}"></th>
+                        <th th:text="${f.busName}"></th>
+                        <th th:text="${f.source}"></th>
+                        <th th:text="${f.destination}"></th>
+                        <th th:text="${f.traveldate}"></th>
+                        <th th:text="${f.departure}"></th>
+                        <th th:text="${f.arrival}"></th>
+                        <th th:text="${f.seats}"></th>
+                        <th th:text="${f.price}"></th>
+                        <th ><a th:href="${'bookbus/'+{f.busId}}" class="book-btn">Book</a></th>
+                    </tr>
+                </tbody>
+            </table> 
+        </div>
+    </div>
+</body>
+</html>
+
